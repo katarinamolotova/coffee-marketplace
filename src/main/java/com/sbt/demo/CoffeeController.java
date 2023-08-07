@@ -1,5 +1,6 @@
 package com.sbt.demo;
 
+import com.sbt.demo.exceptions.OrdersParsingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +16,10 @@ public class CoffeeController {
 
     @GetMapping("/")
     public String getInfo() {
-        return service.getInfoAboutCoffee();
+        try {
+            return service.getInfoAboutOrders();
+        } catch (OrdersParsingException e) {
+            return e.getMessage();
+        }
     }
 }
