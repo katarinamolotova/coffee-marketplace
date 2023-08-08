@@ -1,5 +1,6 @@
-package com.sbt.demo;
+package com.sbt.demo.controllers;
 
+import com.sbt.demo.services.CoffeeService;
 import com.sbt.demo.exceptions.OrdersParsingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

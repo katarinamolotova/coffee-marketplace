@@ -1,4 +1,4 @@
-package com.sbt.demo.dto;
+package com.sbt.demo.services.dto;
 
 
 import com.fasterxml.jackson.annotation.*;

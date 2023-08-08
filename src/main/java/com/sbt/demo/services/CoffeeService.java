@@ -1,10 +1,12 @@
-package com.sbt.demo;
+package com.sbt.demo.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sbt.demo.dto.OrderDTO;
+import com.sbt.demo.repositories.NomenclatureRepositoryImpl;
+import com.sbt.demo.services.dto.OrderDTO;
 import com.sbt.demo.exceptions.OrdersParsingException;
+import com.sbt.demo.services.dto.OrderItemDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -24,6 +26,7 @@ public class CoffeeService {
     @Autowired
     public CoffeeService(
             ObjectMapper mapper,
+            NomenclatureRepositoryImpl nomenclatureRepository,
             @Value("${url.base}") String baseUrl,
             @Value("${url.orders}") String ordersUrl
     ) {
