@@ -7,6 +7,7 @@ import com.sbt.demo.dto.OrderDTO;
 import com.sbt.demo.exceptions.OrdersParsingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -14,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 
 @Service
+@PropertySource("classpath:url.properties")
 public class CoffeeService {
 
     private final String internalUrl;
@@ -22,7 +24,7 @@ public class CoffeeService {
     @Autowired
     public CoffeeService(
             ObjectMapper mapper,
-            @Value("${internal.url}") String url
+            @Value("${url.orders}") String url
     ) {
         objectMapper = mapper;
         internalUrl = url;
