@@ -26,12 +26,12 @@ public class OrderDTO {
     private boolean isDeleted;
 
     @JsonSetter("deleteTs")
-    private void setIsDeleted(String deleteTs) {
+    private void setIsDeletedFromDeletedTime(String deleteTs) {
         isDeleted = (deleteTs != null);
     }
 
     @JsonGetter("isDeleted")
-    private boolean getIsDeleted() {
+    private boolean isDeleted() {
         return isDeleted;
     }
 }
