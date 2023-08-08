@@ -24,10 +24,11 @@ public class CoffeeService {
     @Autowired
     public CoffeeService(
             ObjectMapper mapper,
-            @Value("${url.orders}") String url
+            @Value("${url.base}") String baseUrl,
+            @Value("${url.orders}") String ordersUrl
     ) {
         objectMapper = mapper;
-        internalUrl = url;
+        internalUrl = baseUrl + ordersUrl;
     }
 
     public String getInfoAboutOrders() {
