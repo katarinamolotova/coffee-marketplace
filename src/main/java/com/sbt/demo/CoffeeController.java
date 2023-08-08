@@ -15,7 +15,7 @@ public class CoffeeController {
     }
 
     @GetMapping("/")
-    public String getInfo() {
+    public String getInfoAboutOrders() {
         try {
             return service.getInfoAboutOrders();
         } catch (OrdersParsingException e) {
