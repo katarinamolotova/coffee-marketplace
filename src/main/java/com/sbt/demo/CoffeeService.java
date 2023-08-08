@@ -15,7 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 
 @Service
-@PropertySource("classpath:url.properties")
+@PropertySource("classpath:properties/url.properties")
 public class CoffeeService {
 
     private final String internalUrl;

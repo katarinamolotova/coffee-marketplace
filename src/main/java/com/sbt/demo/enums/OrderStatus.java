@@ -2,8 +2,10 @@ package com.sbt.demo.enums;
 
 
 public enum OrderStatus {
-    RECEIVED,
-    CANCEL,
+    ON_CONFIRMATION,
+    ROASTING,
+    PACKAGING,
     DELIVERY,
-    ROASTING
+    RECEIVED,
+    CANCEL
 }
