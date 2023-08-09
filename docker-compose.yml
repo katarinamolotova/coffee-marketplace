@@ -3,7 +3,7 @@ services:
   backend:
     image: coffee-marketplace
     build:
-      context: ../..
+      context: .
       dockerfile: Dockerfile
     ports:
       - "8080:8181"
@@ -22,8 +22,8 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./../../dist/database:/var/lib/postgresql/data/pgdata/
-      - ./../../dist/docker-entrypoint-initdb:/docker-entrypoint-initdb.d/
+      - ./dist/database:/var/lib/postgresql/data/pgdata/
+      - ./dist/docker-entrypoint-initdb:/docker-entrypoint-initdb.d/
     restart: unless-stopped
 
   pgadmin:
@@ -35,7 +35,7 @@ services:
     ports:
       - "5050:80"
     volumes:
-      - ./../../dist/pgadmin:/var/lib/pgadmin
+      - ./dist/pgadmin:/var/lib/pgadmin
     restart: always
 
 volumes:
