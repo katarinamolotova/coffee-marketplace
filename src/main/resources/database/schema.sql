@@ -6,20 +6,19 @@ create type payment_status as enum (
     'NOT_PAID',
     'IN_PROCESS',
     'PAID'
-    );
+);
 
 create type payment_type as enum (
     'SBP',
     'BANK_CARD',
     'PAYMENT_ON_DELIVERY'
-    );
+);
 
 create table payment (
     id bigint primary key not null,
     status payment_status not null,
     type payment_type not null,
-    receipt_id varchar not null,
-    constraint fk_coalition_receipt_id foreign key (receipt_id) references "user"(id) -- или другая сущность
+    receipt_id varchar not null
 );
 
 create table transport_company (
@@ -56,7 +55,7 @@ create type order_status as enum (
     'DELIVERY',
     'RECEIVED',
     'CANCEL'
-    );
+);
 
 create table "order" (
      id bigint primary key not null,
@@ -66,8 +65,8 @@ create table "order" (
      cost real not null,
      discount real,
      total_cost real not null,
-     payment_id bigint,
-     delivery_id bigint,
+     payment_id bigint not null unique,
+     delivery_id bigint not null unique,
      create_ts timestamp default now() not null,
      update_ts timestamp default now() not null,
      deleted_ts timestamp default now(),
@@ -98,7 +97,7 @@ create type grind_degree_type as enum(
     'COARSE',
     'SMALL',
     'MEDIUM'
-    );
+);
 
 create table order_item (
     id bigint primary key not null,
