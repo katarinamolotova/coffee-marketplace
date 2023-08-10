@@ -1,0 +1,43 @@
+version: '3.8'
+services:
+  backend:
+    image: coffee-marketplace
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8181"
+    depends_on:
+      - service-db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://service-db/marketplace
+
+  service-db:
+    image: postgres:14.7-alpine
+    environment:
+      POSTGRES_DB: marketplace
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: password
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./dist/database:/var/lib/postgresql/data/pgdata/
+      - ./dist/docker-entrypoint-initdb:/docker-entrypoint-initdb.d/
+    restart: unless-stopped
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:7
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - "5050:80"
+    volumes:
+      - ./dist/pgadmin:/var/lib/pgadmin
+    restart: always
+
+volumes:
+  db-data:
+  pgadmin-data:
