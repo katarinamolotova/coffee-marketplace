@@ -6,6 +6,8 @@ import com.sbt.demo.services.mappers.DeliveryMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class DeliveryService {
     private final DeliveryRepositoryImpl deliveryRepository;
@@ -20,7 +22,9 @@ public class DeliveryService {
         this.deliveryMapper = deliveryMapper;
     }
 
-    public void save(DeliveryDTO delivery) {
-        deliveryRepository.save(deliveryMapper.toModel(delivery));
+    public void saveListOfDeliveries(List<DeliveryDTO> deliveries) {
+        deliveries.forEach(
+                delivery -> deliveryRepository.save(deliveryMapper.toModel(delivery))
+        );
     }
 }

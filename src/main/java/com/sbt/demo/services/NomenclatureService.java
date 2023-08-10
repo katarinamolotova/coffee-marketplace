@@ -7,6 +7,8 @@ import com.sbt.demo.services.mappers.NomenclatureMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
+
 @Service
 public class NomenclatureService {
 
@@ -22,7 +24,9 @@ public class NomenclatureService {
         this.nomenclatureMapper = nomenclatureMapper;
     }
 
-    public void save(NomenclatureDTO nomenclatures) {
-        nomenclatureRepository.save(nomenclatureMapper.toModel(nomenclatures));
+    public void saveSetOfNomenclatures(Set<NomenclatureDTO> nomenclatures) {
+        nomenclatures.forEach(
+                nomenclature -> nomenclatureRepository.save(nomenclatureMapper.toModel(nomenclature))
+        );
     }
 }

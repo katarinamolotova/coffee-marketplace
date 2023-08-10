@@ -15,10 +15,10 @@ public class OrderItemMapper extends AbstractMapper<OrderItem, OrderItemDTO> {
         super(OrderItem.class, OrderItemDTO.class);
     }
 
-    public OrderItem toModel(OrderItemDTO dto, OrderDTO parent) {
+    public OrderItem toModel(OrderItemDTO dto, Long orderId) {
         OrderItem orderItem = super.toModel(dto);
         if (orderItem != null) {
-            orderItem.setOrderId(parent.getOrderId());
+            orderItem.setOrderId(orderId);
             orderItem.setNomenclatureId(dto.getNomenclature().getId());
         }
         return orderItem;

@@ -6,6 +6,8 @@ import com.sbt.demo.services.mappers.TransportCompanyMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
+
 @Service
 public class TransportCompanyService {
     private final TransportCompanyRepositoryImpl transportCompanyRepository;
@@ -20,9 +22,11 @@ public class TransportCompanyService {
         this.transportCompanyMapper = transportCompanyMapper;
     }
 
-    public void save(TransportCompanyDTO transportCompany) {
-        transportCompanyRepository.save(
-                transportCompanyMapper.toModel(transportCompany)
+    public void saveSetOfTransportCompanies(Set<TransportCompanyDTO> transportCompanies) {
+        transportCompanies.forEach(
+                transportCompany -> transportCompanyRepository.save(
+                        transportCompanyMapper.toModel(transportCompany)
+                )
         );
     }
 }

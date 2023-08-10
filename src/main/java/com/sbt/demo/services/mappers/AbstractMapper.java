@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
+//  mapper!!!
 @Component
 public abstract class AbstractMapper<M, D> implements Mapper<M, D> {
 

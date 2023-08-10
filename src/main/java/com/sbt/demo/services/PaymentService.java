@@ -6,6 +6,8 @@ import com.sbt.demo.services.mappers.PaymentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class PaymentService {
 
@@ -21,7 +23,9 @@ public class PaymentService {
         this.paymentRepository = paymentRepository;
     }
 
-    public void save(PaymentDTO payment) {
-        paymentRepository.save(paymentMapper.toModel(payment));
+    public void saveListOfPayments(List<PaymentDTO> payments) {
+        payments.forEach(
+                payment -> paymentRepository.save(paymentMapper.toModel(payment))
+        );
     }
 }

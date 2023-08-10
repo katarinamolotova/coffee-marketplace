@@ -1,11 +1,14 @@
 package com.sbt.demo.services;
 
 import com.sbt.demo.repositories.OrderItemRepositoryImpl;
-import com.sbt.demo.services.dto.OrderDTO;
 import com.sbt.demo.services.dto.OrderItemDTO;
 import com.sbt.demo.services.mappers.OrderItemMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 @Service
 public class OrderItemService {
@@ -21,7 +24,12 @@ public class OrderItemService {
         this.orderItemRepository = orderItemRepository;
     }
 
-    public void save(OrderItemDTO orderItem, OrderDTO order) {
-        orderItemRepository.save(orderItemMapper.toModel(orderItem, order));
+    public void saveMapOfOrderIdAndOrderItems(Map<Long, List<OrderItemDTO>> orderIdAndOrderItems) {
+        orderIdAndOrderItems.forEach(
+                (id, orderItems) -> orderItems.forEach(
+                        orderItem ->
+                            orderItemRepository.save(orderItemMapper.toModel(orderItem, id))
+                )
+        );
     }
 }

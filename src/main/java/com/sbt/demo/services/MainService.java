@@ -1,25 +1,14 @@
 package com.sbt.demo.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sbt.demo.services.dto.*;
-import com.sbt.demo.exceptions.OrdersParsingException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
-@PropertySource("classpath:properties/url.properties")
 public class MainService {
-
-    private final String internalUrl;
-    private final ObjectMapper objectMapper;
 
     private final NomenclatureService nomenclatureService;
     private final PaymentService paymentService;
@@ -28,22 +17,19 @@ public class MainService {
     private final OrderService orderService;
     private final OrderItemService orderItemService;
     private final StatusHistoryService statusHistoryService;
+    private final HandlerJsonService handlerJsonService;
 
     @Autowired
     public MainService(
-            ObjectMapper mapper,
-            @Value("${url.base}") String baseUrl,
-            @Value("${url.orders}") String ordersUrl,
             NomenclatureService nomenclatureService,
             PaymentService paymentService,
             DeliveryService deliveryService,
             TransportCompanyService transportCompanyService,
             OrderService orderService,
             OrderItemService orderItemService,
-            StatusHistoryService statusHistoryService) {
-        objectMapper = mapper;
-        internalUrl = baseUrl + ordersUrl;
-
+            StatusHistoryService statusHistoryService,
+            HandlerJsonService handlerJsonService
+    ) {
         this.nomenclatureService = nomenclatureService;
         this.paymentService = paymentService;
         this.deliveryService = deliveryService;
@@ -51,61 +37,62 @@ public class MainService {
         this.orderService = orderService;
         this.orderItemService = orderItemService;
         this.statusHistoryService = statusHistoryService;
+        this.handlerJsonService = handlerJsonService;
     }
 
     public String getInfoAboutOrders() {
-        String response = getJson();
-        List<OrderDTO> orders = convertJsonToOrders(response);
-        saveAllData(orders);
-        return convertOrdersToJson(orders);
+        List<OrderDTO> orders = handlerJsonService.getOrdersFromExternalApi();
+        return handlerJsonService.convertOrdersToJson(orders);
     }
 
-    private String getJson() {
-        RestTemplate template = new RestTemplate();
-        ResponseEntity<String> response = template.getForEntity(internalUrl, String.class);
-        return response.getBody();
+    private Set<NomenclatureDTO> getNomenclatureFromOrders(List<OrderDTO> orders) {
+        return orders.stream()
+                .map(OrderDTO::getOrderItems)
+                .flatMap(Collection::stream)
+                .map(OrderItemDTO::getNomenclature)
+                .collect(Collectors.toSet());
     }
 
-    private List<OrderDTO> convertJsonToOrders(String json) {
-        try {
-            return objectMapper.readValue(json, new TypeReference<List<OrderDTO>>(){});
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            throw new OrdersParsingException();
-        }
+    private Set<TransportCompanyDTO> getTransportCompanyFromOrders(List<OrderDTO> orders) {
+        return orders.stream()
+                .map(OrderDTO::getOrderDelivery)
+                .filter(Objects::nonNull)
+                .map(DeliveryDTO::getTransportCompany)
+                .collect(Collectors.toSet());
     }
 
-    private String convertOrdersToJson(List<OrderDTO> orders) {
-        try {
-            return objectMapper.writeValueAsString(orders);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            throw new OrdersParsingException();
-        }
+    private List<PaymentDTO> getPaymentFromOrders(List<OrderDTO> orders) {
+        return orders.stream()
+                .map(OrderDTO::getOrderPayment)
+                .collect(Collectors.toList());
     }
 
-    private void saveAllData(List<OrderDTO> orders) {
-        orders.forEach(
-                order -> {
-                    paymentService.save(order.getOrderPayment());
-                    DeliveryDTO d = order.getOrderDelivery();
-                    if (d != null) {
-                        TransportCompanyDTO tc = order.getOrderDelivery().getTransportCompany();
-                        if (tc != null)
-                            transportCompanyService.save(tc);
-                        deliveryService.save(order.getOrderDelivery());
-                    }
-                    orderService.save(order);
-                    order.getOrderItems().forEach(
-                            item -> {
-                                nomenclatureService.save(item.getNomenclature());
-                                orderItemService.save(item, order);
-                            }
-                    );
-                    order.getStatusHistory().forEach(
-                            history -> statusHistoryService.save(history, order)
-                    );
-                }
-        );
+    private List<DeliveryDTO> getDeliveryFromOrders(List<OrderDTO> orders) {
+        return orders.stream()
+                .map(OrderDTO::getOrderDelivery)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
+
+    private Map<Long, List<OrderItemDTO>> getMapOrderIdAndOrderItemsFromOrders(List<OrderDTO> orders) {
+        return orders.stream()
+                .collect(Collectors.toMap(OrderDTO::getOrderId, OrderDTO::getOrderItems));
+    }
+
+    private Map<Long, List<StatusHistoryDTO>> getMapOrderIdAndHistoryStatusFromOrders(List<OrderDTO> orders) {
+        return orders.stream()
+                .collect(Collectors.toMap(OrderDTO::getOrderId, OrderDTO::getStatusHistory));
+    }
+
+    public void saveAllData() {
+        List<OrderDTO> orders = handlerJsonService.getOrdersFromExternalApi();
+
+        nomenclatureService.saveSetOfNomenclatures(getNomenclatureFromOrders(orders));
+        transportCompanyService.saveSetOfTransportCompanies(getTransportCompanyFromOrders(orders));
+        deliveryService.saveListOfDeliveries(getDeliveryFromOrders(orders));
+        paymentService.saveListOfPayments(getPaymentFromOrders(orders));
+        orderService.saveListOfOrders(orders);
+        orderItemService.saveMapOfOrderIdAndOrderItems(getMapOrderIdAndOrderItemsFromOrders(orders));
+        statusHistoryService.saveMapOrderIdAndStatusHistory(getMapOrderIdAndHistoryStatusFromOrders(orders));
     }
 }

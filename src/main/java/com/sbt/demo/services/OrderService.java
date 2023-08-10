@@ -6,6 +6,8 @@ import com.sbt.demo.services.mappers.OrderMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class OrderService {
     private final OrderMapper orderMapper;
@@ -20,7 +22,9 @@ public class OrderService {
         this.orderRepository = orderRepository;
     }
 
-    public void save(OrderDTO order) {
-        orderRepository.save(orderMapper.toModel(order));
+    public void saveListOfOrders(List<OrderDTO> orders) {
+        orders.forEach(
+                order -> orderRepository.save(orderMapper.toModel(order))
+        );
     }
 }

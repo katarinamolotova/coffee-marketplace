@@ -18,7 +18,8 @@ public class CoffeeController {
     @GetMapping("/")
     public String getInfoAboutOrders() {
         try {
-            return service.getInfoAboutOrders();
+            service.saveAllData();
+            return "Все данные сохранены в базу";
         } catch (OrdersParsingException e) {
             return e.getMessage();
         }
