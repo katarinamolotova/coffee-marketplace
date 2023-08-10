@@ -9,8 +9,8 @@ services:
       - "8080:8181"
     depends_on:
       - service-db
-  #    environment:
-  #      - SPRING_DATASOURCE_URL=jdbc:postgresql://service-db/books_db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://service-db/marketplace
 
   service-db:
     image: postgres:14.7-alpine

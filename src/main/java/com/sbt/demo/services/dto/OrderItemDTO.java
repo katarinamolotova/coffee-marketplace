@@ -1,4 +1,4 @@
-package com.sbt.demo.dto;
+package com.sbt.demo.services.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sbt.demo.enums.GrindDegreeType;
@@ -14,6 +14,7 @@ import lombok.Setter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OrderItemDTO {
     private Long orderItemId;
+    private NomenclatureDTO nomenclature;
     private Long count;
     private GrindDegreeType grindDegreeType;
     private Integer cost;

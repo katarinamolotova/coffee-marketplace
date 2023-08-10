@@ -1,7 +1,3 @@
-create table "user" (
-    id varchar primary key not null
-);
-
 create type payment_status as enum (
     'NOT_PAID',
     'IN_PROCESS',
@@ -11,7 +7,8 @@ create type payment_status as enum (
 create type payment_type as enum (
     'SBP',
     'BANK_CARD',
-    'PAYMENT_ON_DELIVERY'
+    'PAYMENT_ON_DELIVERY',
+    'SBER_PAY'
 );
 
 create table payment (
@@ -65,12 +62,11 @@ create table "order" (
      cost real not null,
      discount real,
      total_cost real not null,
-     payment_id bigint not null unique,
-     delivery_id bigint not null unique,
+     payment_id bigint unique,
+     delivery_id bigint unique,
      create_ts timestamp default now() not null,
      update_ts timestamp default now() not null,
-     deleted_ts timestamp default now(),
-     constraint fk_coalition_user_id foreign key (user_id) references "user"(id),
+     deleted boolean default false,
      constraint fk_coalition_payment_id foreign key (payment_id) references payment(id),
      constraint fk_coalition_delivery_id foreign key (delivery_id) references delivery(id)
 );

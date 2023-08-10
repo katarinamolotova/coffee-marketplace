@@ -1,11 +1,10 @@
-package com.sbt.demo;
+package com.sbt.demo.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sbt.demo.dto.OrderDTO;
 import com.sbt.demo.exceptions.OrdersParsingException;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.sbt.demo.services.dto.OrderDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.ResponseEntity;
@@ -16,13 +15,11 @@ import java.util.List;
 
 @Service
 @PropertySource("classpath:properties/url.properties")
-public class CoffeeService {
-
+public class HandlerJsonService {
     private final String internalUrl;
     private final ObjectMapper objectMapper;
 
-    @Autowired
-    public CoffeeService(
+    public HandlerJsonService(  //  naming adapter external API
             ObjectMapper mapper,
             @Value("${url.base}") String baseUrl,
             @Value("${url.orders}") String ordersUrl
@@ -31,10 +28,9 @@ public class CoffeeService {
         internalUrl = baseUrl + ordersUrl;
     }
 
-    public String getInfoAboutOrders() {
-        String response = getJson();
-        List<OrderDTO> orders = convertJsonToOrders(response);
-        return convertOrdersToJson(orders);
+    public List<OrderDTO> getOrdersFromExternalApi() {
+        String json = getJson();
+        return convertJsonToOrders(json);
     }
 
     private String getJson() {
@@ -52,7 +48,7 @@ public class CoffeeService {
         }
     }
 
-    private String convertOrdersToJson(List<OrderDTO> orders) {
+    public String convertOrdersToJson(List<OrderDTO> orders) {
         try {
             return objectMapper.writeValueAsString(orders);
         } catch (JsonProcessingException e) {
@@ -60,4 +56,5 @@ public class CoffeeService {
             throw new OrdersParsingException();
         }
     }
+
 }

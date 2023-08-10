@@ -12,6 +12,6 @@ docker run -d -p 8080:8181 -t coffee-marketplace
 
 docker-compose up
 
-### Watch result
+### Watch result (only backend)
 
 http://localhost:8080
