@@ -1,8 +1,12 @@
-package com.sbt.demo.models;
+package com.sbt.demo.repositories.entities;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Nomenclature {
     private Long id;
     private String name;

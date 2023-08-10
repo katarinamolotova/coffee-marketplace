@@ -1,7 +1,8 @@
 package com.sbt.demo.repositories;
 
-import com.sbt.demo.config.SocketsApplicationConfig;
-import com.sbt.demo.models.Nomenclature;
+import com.sbt.demo.config.ApplicationConfig;
+import com.sbt.demo.repositories.entities.Nomenclature;
+import com.sbt.demo.repositories.mappers.NomenclatureRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -15,22 +16,21 @@ public class NomenclatureRepositoryImpl implements CrudRepository<Nomenclature> 
     private final String tableName = "nomenclature";
 
     @Autowired
-    NomenclatureRepositoryImpl(SocketsApplicationConfig config) {
+    NomenclatureRepositoryImpl(ApplicationConfig config) {
         this.template = config.jdbcTemplate();
     }
-
 
     @Override
     public Nomenclature findById(Long id) {
         String sql = "SELECT * FROM " + tableName + " WHERE id = ?";
-        return template.query(sql, new Object[] { id }, new NomenclatureRawMapper())
+        return template.query(sql, new Object[] { id }, new NomenclatureRowMapper())
                 .stream().findFirst().orElse(null);
     }
 
     @Override
     public List<Nomenclature> findAll() {
         String sql = "SELECT * FROM " + tableName;
-        return template.query(sql, new NomenclatureRawMapper());
+        return template.query(sql, new NomenclatureRowMapper());
     }
 
     @Override

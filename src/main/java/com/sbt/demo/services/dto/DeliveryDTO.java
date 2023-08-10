@@ -2,6 +2,7 @@ package com.sbt.demo.services.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.sbt.demo.enums.DeliveryStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,13 +13,13 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class NomenclatureDTO {
+public class DeliveryDTO {
 
-    @JsonProperty("nomenclatureId")
+    @JsonProperty("orderDeliveryId")
     private Long id;
-    private String name;
-    private String description;
-    private Float acidity;
-    private Float density;
-    private Float price;
+    private TransportCompanyDTO transportCompany;
+
+    @JsonProperty("orderDeliveryStatus")
+    private DeliveryStatus deliveryStatus;
+    private String address;
 }

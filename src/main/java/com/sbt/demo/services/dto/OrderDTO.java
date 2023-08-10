@@ -18,9 +18,16 @@ public class OrderDTO {
     private Long orderId;
     private OrderType orderType;
     private OrderStatus orderStatus;
+    private String userId;
+    private Float cost;
+    private Float discount;
+    private Float totalCost;
+    private PaymentDTO orderPayment;
+    private DeliveryDTO orderDelivery;
     private LocalDateTime createTs;
     private LocalDateTime updateTs;
     private List<OrderItemDTO> orderItems;
+    private List<StatusHistoryDTO> statusHistory;
 
     @JsonIgnore
     private boolean isDeleted;

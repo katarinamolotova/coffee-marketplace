@@ -12,13 +12,15 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class NomenclatureDTO {
+public class TransportCompanyDTO {
 
-    @JsonProperty("nomenclatureId")
+    @JsonProperty("transportCompanyId")
     private Long id;
-    private String name;
-    private String description;
-    private Float acidity;
-    private Float density;
-    private Float price;
+    private String shortName;
+    private String fullName;
+    private String inn;
+    private String kpp;
+    private String okpo;
+    private String ogrn;
+    private String address;
 }
