@@ -1,13 +1,17 @@
 # coffee-marketplace
 
-### Build image
+### Build image (only backend)
 
 docker build -t coffee-marketplace .
 
-### Run container
+### Run container (only backend)
 
 docker run -d -p 8080:8181 -t coffee-marketplace
 
-### Watch result
+### Run pgAdmin, postgres and backend
+
+docker-compose up
+
+### Watch result (only backend)
 
 http://localhost:8080
