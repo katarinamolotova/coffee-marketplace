@@ -14,7 +14,6 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 
 @Service
-@PropertySource("classpath:properties/url.properties")
 public class HandlerJsonService {
     private final String internalUrl;
     private final ObjectMapper objectMapper;
@@ -42,8 +41,7 @@ public class HandlerJsonService {
     private List<OrderDTO> convertJsonToOrders(String json) {
         try {
             return objectMapper.readValue(json, new TypeReference<List<OrderDTO>>(){});
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
+        } catch (final JsonProcessingException e) {
             throw new OrdersParsingException();
         }
     }
@@ -51,8 +49,7 @@ public class HandlerJsonService {
     public String convertOrdersToJson(List<OrderDTO> orders) {
         try {
             return objectMapper.writeValueAsString(orders);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
+        } catch (final JsonProcessingException e) {
             throw new OrdersParsingException();
         }
     }

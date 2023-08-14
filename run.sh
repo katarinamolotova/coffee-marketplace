@@ -13,9 +13,5 @@ mkdir $(pwd)/dist/database;
 echo "Created database directory"
 mkdir $(pwd)/dist/pgadmin;
 echo "Created pgadmin directory"
-mkdir $(pwd)/dist/docker-entrypoint-initdb;
-echo "Created docker-entrypoint-initdb directory"
-
-cp $(pwd)/src/main/resources/database/* $(pwd)/dist/docker-entrypoint-initdb/
 
 docker-compose up

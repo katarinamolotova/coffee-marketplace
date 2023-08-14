@@ -45,6 +45,18 @@ public class MainService {
         return handlerJsonService.convertOrdersToJson(orders);
     }
 
+    public void saveAllData() {
+        List<OrderDTO> orders = handlerJsonService.getOrdersFromExternalApi();
+
+        nomenclatureService.saveSetOfNomenclatures(getNomenclatureFromOrders(orders));
+        transportCompanyService.saveSetOfTransportCompanies(getTransportCompanyFromOrders(orders));
+        deliveryService.saveListOfDeliveries(getDeliveryFromOrders(orders));
+        paymentService.saveListOfPayments(getPaymentFromOrders(orders));
+        orderService.saveListOfOrders(orders);
+        orderItemService.saveMapOfOrderIdAndOrderItems(getMapOrderIdAndOrderItemsFromOrders(orders));
+        statusHistoryService.saveMapOrderIdAndStatusHistory(getMapOrderIdAndHistoryStatusFromOrders(orders));
+    }
+
     private Set<NomenclatureDTO> getNomenclatureFromOrders(List<OrderDTO> orders) {
         return orders.stream()
                 .map(OrderDTO::getOrderItems)
@@ -82,17 +94,5 @@ public class MainService {
     private Map<Long, List<StatusHistoryDTO>> getMapOrderIdAndHistoryStatusFromOrders(List<OrderDTO> orders) {
         return orders.stream()
                 .collect(Collectors.toMap(OrderDTO::getOrderId, OrderDTO::getStatusHistory));
-    }
-
-    public void saveAllData() {
-        List<OrderDTO> orders = handlerJsonService.getOrdersFromExternalApi();
-
-        nomenclatureService.saveSetOfNomenclatures(getNomenclatureFromOrders(orders));
-        transportCompanyService.saveSetOfTransportCompanies(getTransportCompanyFromOrders(orders));
-        deliveryService.saveListOfDeliveries(getDeliveryFromOrders(orders));
-        paymentService.saveListOfPayments(getPaymentFromOrders(orders));
-        orderService.saveListOfOrders(orders);
-        orderItemService.saveMapOfOrderIdAndOrderItems(getMapOrderIdAndOrderItemsFromOrders(orders));
-        statusHistoryService.saveMapOrderIdAndStatusHistory(getMapOrderIdAndHistoryStatusFromOrders(orders));
     }
 }

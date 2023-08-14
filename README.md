@@ -15,3 +15,7 @@ docker-compose up
 ### Watch result (only backend)
 
 http://localhost:8080
+
+### Run flyway
+
+cd data && bash run_flyway.sh
