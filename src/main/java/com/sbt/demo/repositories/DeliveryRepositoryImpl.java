@@ -12,7 +12,6 @@ import java.util.List;
 @Repository
 public class DeliveryRepositoryImpl implements CrudRepository<Delivery> {
     private final JdbcTemplate template;
-    private final String tableName = "delivery";
 
     @Autowired
     DeliveryRepositoryImpl(ApplicationConfig config) {
@@ -21,20 +20,20 @@ public class DeliveryRepositoryImpl implements CrudRepository<Delivery> {
 
     @Override
     public Delivery findById(Long id) {
-        String sql = "SELECT * FROM " + tableName + " WHERE id = ?";
+        String sql = "SELECT * FROM delivery WHERE id = ?";
         return template.query(sql, new Object[] { id }, new DeliveryRowMapper())
                 .stream().findFirst().orElse(null);
     }
 
     @Override
     public List<Delivery> findAll() {
-        String sql = "SELECT * FROM " + tableName;
+        String sql = "SELECT * FROM delivery";
         return template.query(sql, new DeliveryRowMapper());
     }
 
     @Override
     public boolean save(Delivery entity) {
-        String sql = "INSERT INTO " + tableName + " VALUES (?, ?, ?::delivery_status, ?)";
+        String sql = "INSERT INTO delivery VALUES (?, ?, ?::delivery_status, ?)";
         if (findById(entity.getId()) != null)
             return false;
         return template.update(sql, entity.getId(), entity.getTransportCompanyId(),
@@ -43,7 +42,7 @@ public class DeliveryRepositoryImpl implements CrudRepository<Delivery> {
 
     @Override
     public boolean update(Delivery entity) {
-        String sql = "UPDATE " + tableName + " SET transport_company_id = ?, " +
+        String sql = "UPDATE delivery SET transport_company_id = ?, " +
                 "status = ?::delivery_status, address = ? WHERE id = ?";
         return template.update(sql, entity.getTransportCompanyId(),
                 entity.getDeliveryStatus().toString(), entity.getAddress(), entity.getId()) == 1;
@@ -51,7 +50,7 @@ public class DeliveryRepositoryImpl implements CrudRepository<Delivery> {
 
     @Override
     public boolean delete(Long id) {
-        String sql = "DELETE FROM " + tableName + " WHERE id = ?";
+        String sql = "DELETE FROM delivery WHERE id = ?";
         return template.update(sql, id) == 1;
     }
 }

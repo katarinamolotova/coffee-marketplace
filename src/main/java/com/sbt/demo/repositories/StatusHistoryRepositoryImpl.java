@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class StatusHistoryRepositoryImpl {
     private final JdbcTemplate template;
-    private final String tableName = "status_history";
 
     @Autowired
     StatusHistoryRepositoryImpl(ApplicationConfig config) {
@@ -18,13 +17,13 @@ public class StatusHistoryRepositoryImpl {
     }
 
     public StatusHistory findById(Long id) {
-        String sql = "SELECT * FROM " + tableName + " WHERE id = ?";
+        String sql = "SELECT * FROM status_history WHERE id = ?";
         return template.query(sql, new Object[] { id }, new StatusHistoryRowMapper())
                 .stream().findFirst().orElse(null);
     }
 
     public boolean save(StatusHistory entity) {
-        String sql = "INSERT INTO " + tableName + " VALUES (?, ?, ?::order_status, ?)";
+        String sql = "INSERT INTO status_history VALUES (?, ?, ?::order_status, ?)";
         if (findById(entity.getId()) != null)
             return false;
         return template.update(sql, entity.getId(), entity.getOrderId(),

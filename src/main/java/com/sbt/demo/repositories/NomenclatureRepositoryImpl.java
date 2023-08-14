@@ -13,7 +13,6 @@ import java.util.List;
 public class NomenclatureRepositoryImpl implements CrudRepository<Nomenclature> {
 
     private final JdbcTemplate template;
-    private final String tableName = "nomenclature";
 
     @Autowired
     NomenclatureRepositoryImpl(ApplicationConfig config) {
@@ -22,20 +21,20 @@ public class NomenclatureRepositoryImpl implements CrudRepository<Nomenclature> 
 
     @Override
     public Nomenclature findById(Long id) {
-        String sql = "SELECT * FROM " + tableName + " WHERE id = ?";
+        String sql = "SELECT * FROM nomenclature WHERE id = ?";
         return template.query(sql, new Object[] { id }, new NomenclatureRowMapper())
                 .stream().findFirst().orElse(null);
     }
 
     @Override
     public List<Nomenclature> findAll() {
-        String sql = "SELECT * FROM " + tableName;
+        String sql = "SELECT * FROM nomenclature";
         return template.query(sql, new NomenclatureRowMapper());
     }
 
     @Override
     public boolean save(Nomenclature entity) {
-        String sql = "INSERT INTO " + tableName + " VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO nomenclature VALUES (?, ?, ?, ?, ?, ?)";
         if (findById(entity.getId()) != null)
             return false;
         return template.update(sql, entity.getId(), entity.getName(), entity.getDescription(),
@@ -44,7 +43,7 @@ public class NomenclatureRepositoryImpl implements CrudRepository<Nomenclature> 
 
     @Override
     public boolean update(Nomenclature entity) {
-        String sql = "UPDATE " + tableName + " SET name = ?, description = ?," +
+        String sql = "UPDATE nomenclature SET name = ?, description = ?," +
                 "acidity = ?, density = ?, price = ? WHERE id = ?";
         return template.update(sql, entity.getName(), entity.getDescription(),
                 entity.getAcidity(), entity.getDensity(), entity.getPrice(), entity.getId()) == 1;
@@ -52,7 +51,7 @@ public class NomenclatureRepositoryImpl implements CrudRepository<Nomenclature> 
 
     @Override
     public boolean delete(Long id) {
-        String sql = "DELETE FROM " + tableName + " WHERE id = ?";
+        String sql = "DELETE FROM nomenclature WHERE id = ?";
         return template.update(sql, id) == 1;
     }
 }

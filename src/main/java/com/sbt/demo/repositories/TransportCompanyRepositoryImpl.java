@@ -12,7 +12,6 @@ import java.util.List;
 @Repository
 public class TransportCompanyRepositoryImpl implements CrudRepository<TransportCompany> {
     private final JdbcTemplate template;
-    private final String tableName = "transport_company";
 
     @Autowired
     TransportCompanyRepositoryImpl(ApplicationConfig config) {
@@ -21,20 +20,20 @@ public class TransportCompanyRepositoryImpl implements CrudRepository<TransportC
 
     @Override
     public TransportCompany findById(Long id) {
-        String sql = "SELECT * FROM " + tableName + " WHERE id = ?";
+        String sql = "SELECT * FROM transport_company WHERE id = ?";
         return template.query(sql, new Object[] { id }, new TransportCompanyRowMapper())
                 .stream().findFirst().orElse(null);
     }
 
     @Override
     public List<TransportCompany> findAll() {
-        String sql = "SELECT * FROM " + tableName;
+        String sql = "SELECT * FROM transport_company";
         return template.query(sql, new TransportCompanyRowMapper());
     }
 
     @Override
     public boolean save(TransportCompany entity) {
-        String sql = "INSERT INTO " + tableName + " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO transport_company VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         if (findById(entity.getId()) != null)
             return false;
         return template.update(sql, entity.getId(), entity.getShortName(),
@@ -44,7 +43,7 @@ public class TransportCompanyRepositoryImpl implements CrudRepository<TransportC
 
     @Override
     public boolean update(TransportCompany entity) {
-        String sql = "UPDATE " + tableName + " SET short_name = ?, " +
+        String sql = "UPDATE transport_company SET short_name = ?, " +
                 "full_name = ?, inn = ?, kpp = ?, okpo = ?, ogrn = ?, " +
                 "address = ? WHERE id = ?";
         return template.update(sql, entity.getShortName(), entity.getFullName(),
@@ -54,7 +53,7 @@ public class TransportCompanyRepositoryImpl implements CrudRepository<TransportC
 
     @Override
     public boolean delete(Long id) {
-        String sql = "DELETE FROM " + tableName + " WHERE id = ?";
+        String sql = "DELETE FROM transport_company WHERE id = ?";
         return template.update(sql, id) == 1;
     }
 }

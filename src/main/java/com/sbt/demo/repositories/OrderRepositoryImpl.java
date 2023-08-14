@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class OrderRepositoryImpl {
     private final JdbcTemplate template;
-    private final String tableName = "\"order\"";
 
     @Autowired
     OrderRepositoryImpl(ApplicationConfig config) {
@@ -18,13 +17,13 @@ public class OrderRepositoryImpl {
     }
 
     public Order findById(Long id) {
-        String sql = "SELECT * FROM " + tableName + " WHERE id = ?";
+        String sql = "SELECT * FROM \"order\" WHERE id = ?";
         return template.query(sql, new Object[] { id }, new OrderRowMapper())
                 .stream().findFirst().orElse(null);
     }
 
     public boolean save(Order entity) {
-        String sql = "INSERT INTO " + tableName + " VALUES (?, ?::order_type, ?::order_status, ?," +
+        String sql = "INSERT INTO \"order\" VALUES (?, ?::order_type, ?::order_status, ?," +
                 "?, ?, ?, ?, ?, ?, ?, ?)";
         if (findById(entity.getOrderId()) != null)
             return false;
