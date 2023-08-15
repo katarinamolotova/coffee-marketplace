@@ -1,21 +1,17 @@
 # coffee-marketplace
 
-### Build image (only backend)
+### Run only flyway
 
-docker build -t coffee-marketplace .
+```cd data && bash run_flyway.sh```
 
-### Run container (only backend)
+### Run all (from source directory)
 
-docker run -d -p 8080:8181 -t coffee-marketplace
+```bash run.sh```
 
-### Run pgAdmin, postgres and backend
+#### pgAdmin
 
-docker-compose up
+localhost:5050
 
-### Watch result (only backend)
+#### backend
 
-http://localhost:8080
-
-### Run flyway
-
-cd data && bash run_flyway.sh
+localhost:8080

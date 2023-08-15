@@ -43,11 +43,6 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public JdbcTemplate jdbcTemplate() {
-        return new JdbcTemplate(hikariDataSource());
-    }
-
-    @Bean
     public ModelMapper modelMapper() {
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration()

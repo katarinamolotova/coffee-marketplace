@@ -1,32 +1,33 @@
 package com.sbt.demo.services;
 
-import com.sbt.demo.repositories.StatusHistoryRepositoryImpl;
+import com.sbt.demo.repositories.StatusHistoryRepository;
+import com.sbt.demo.repositories.entities.StatusHistory;
 import com.sbt.demo.services.dto.StatusHistoryDTO;
 import com.sbt.demo.services.mappers.StatusHistoryMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 
 @Service
+@AllArgsConstructor
 public class StatusHistoryService {
     private final StatusHistoryMapper statusHistoryMapper;
-    private final StatusHistoryRepositoryImpl statusHistoryRepository;
+    private final StatusHistoryRepository statusHistoryRepository;
 
-    @Autowired
-    public StatusHistoryService(
-            StatusHistoryMapper statusHistoryMapper,
-            StatusHistoryRepositoryImpl statusHistoryRepository
-    ) {
-        this.statusHistoryMapper = statusHistoryMapper;
-        this.statusHistoryRepository = statusHistoryRepository;
-    }
-
-    public void saveMapOrderIdAndStatusHistory(Map<Long, List<StatusHistoryDTO>> orderIdAndStatusHistory) {
+    public void saveMapOrderIdAndStatusHistory(final Map<Long, List<StatusHistoryDTO>> orderIdAndStatusHistory) {
         orderIdAndStatusHistory.forEach(
                 (id, statusesHistory) -> statusesHistory.forEach(
-                        statusHistory -> statusHistoryRepository.save(statusHistoryMapper.toModel(statusHistory, id))
+                        statusHistory -> {
+                            final StatusHistory entity = statusHistoryMapper.toModel(statusHistory, id);
+                            statusHistoryRepository.create(
+                                    entity.getId(),
+                                    entity.getOrderId(),
+                                    entity.getOrderStatus().toString(),
+                                    entity.getOperationTime()
+                            );
+                        }
                 )
         );
     }

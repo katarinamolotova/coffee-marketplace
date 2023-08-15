@@ -1,35 +1,38 @@
 package com.sbt.demo.services;
 
-import com.sbt.demo.repositories.OrderItemRepositoryImpl;
+import com.sbt.demo.repositories.OrderItemRepository;
+import com.sbt.demo.repositories.entities.OrderItem;
 import com.sbt.demo.services.dto.OrderItemDTO;
 import com.sbt.demo.services.mappers.OrderItemMapper;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
 @Service
+@AllArgsConstructor
 public class OrderItemService {
     private final OrderItemMapper orderItemMapper;
-    private final OrderItemRepositoryImpl orderItemRepository;
+    private final OrderItemRepository orderItemRepository;
 
-    @Autowired
-    public OrderItemService(
-            OrderItemMapper orderItemMapper,
-            OrderItemRepositoryImpl orderItemRepository
-    ) {
-        this.orderItemMapper = orderItemMapper;
-        this.orderItemRepository = orderItemRepository;
-    }
-
-    public void saveMapOfOrderIdAndOrderItems(Map<Long, List<OrderItemDTO>> orderIdAndOrderItems) {
+    public void saveMapOfOrderIdAndOrderItems(final Map<Long, List<OrderItemDTO>> orderIdAndOrderItems) {
         orderIdAndOrderItems.forEach(
-                (id, orderItems) -> orderItems.forEach(
-                        orderItem ->
-                            orderItemRepository.save(orderItemMapper.toModel(orderItem, id))
-                )
+            (id, orderItems) -> orderItems.forEach(
+                orderItem -> {
+                    final OrderItem entity = orderItemMapper.toModel(orderItem, id);
+                    orderItemRepository.create(
+                            entity.getOrderItemId(),
+                            entity.getOrderId(),
+                            entity.getNomenclatureId(),
+                            entity.getCount(),
+                            entity.getGrindDegreeType().toString(),
+                            entity.getCost(),
+                            entity.getSerialNumber()
+                    );
+                }
+            )
         );
     }
 }
